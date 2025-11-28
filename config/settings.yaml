@@ -1,0 +1,20 @@
+pairs:
+  energy:
+    brent: "BZ=F"
+    wti: "CL=F"
+  metals:
+    gold: "GC=F"
+    silver: "SI=F"
+  base:
+    copper: "HG=F"
+
+backtest:
+  start_date: "2010-01-01"
+  end_date: "2025-01-01"
+  freq: "1d"
+  transaction_cost: 0.0002
+  slippage: 0.0001
+  zscore_entry: 2.0
+  zscore_exit: 0.5
+  vol_target: 0.15
+

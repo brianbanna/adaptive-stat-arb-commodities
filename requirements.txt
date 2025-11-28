@@ -1,0 +1,17 @@
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+statsmodels
+scikit-learn
+arch
+pykalman
+hmmlearn
+backtrader
+vectorbt
+pyfolio
+yfinance
+pytimetk
+pyyaml
+
