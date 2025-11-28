@@ -1,0 +1,221 @@
+```md
+---
+alwaysApply: true
+---
+
+# Custom Project Rules – Adaptive Statistical Arbitrage in Commodity Markets
+
+This rule applies to all generations and edits in this repository.
+
+The repository represents an independent **quantitative trading research project** that develops an adaptive statistical arbitrage system across multiple commodities.  
+The objective is to maintain a **clean, modular, and trading-desk-grade codebase** that mirrors how real quant teams prototype and backtest trading systems.
+
+---
+
+## General Guidelines
+
+- Prioritize **clarity, robustness, and reproducibility** over complexity.
+- Every model, feature, and signal must be explainable.
+- Follow the structure exactly; do not duplicate code across notebooks or scripts.
+- Always use modular imports from `src/`, never redefine logic inside notebooks.
+- Write every piece of code as if it were to be reviewed by a portfolio manager.
+
+---
+
+## Folder & Workflow Rules
+
+Keep this structure exactly:
+
+```
+
+src/
+data_pipeline/          → data download, cleaning, back adjustment
+features/               → spread, volatility, and regime features
+models/                 → Kalman filters, GARCH, HMM, cointegration
+trading/                → signal logic and portfolio construction
+backtesting/            → simulation and performance analytics
+utils/
+visualization/        → plots and charts
+results/
+figures/            → saved plots
+tables/             → performance metrics
+reports/            → generated summaries
+notebooks/                → ordered notebooks (01_explore to 05_results)
+config/                   → global settings and parameters
+tests/                    → deterministic tests for validation
+
+````
+
+Notebook rules:
+- Each notebook serves **one clear purpose** (exploration, modeling, testing, etc.).
+- The first cell must contain a short Markdown summary of the goal, data used, and expected outputs.
+- Notebooks must call code from `src/`, not contain core logic.
+
+---
+
+## Code Style and Standards
+
+- Follow **PEP-8** strictly:
+  - 4-space indentation  
+  - Line length ≤ 88 characters  
+  - Snake case for variables/functions (`zscore_spread`)  
+  - Pascal case for classes (`KalmanHedgeModel`)
+- Keep functions short and focused.
+- Use explicit imports (`from src.trading.signals import generate_signals`).
+- Avoid global state, magic numbers, or redundant loops.
+
+---
+
+## Documentation Requirements
+
+Every file begins with a concise docstring:
+
+```python
+"""
+Implements adaptive statistical arbitrage strategy components.
+"""
+````
+
+Every function must specify purpose, parameters, and returns:
+
+```python
+def kalman_hedge_ratio(x: pd.Series, y: pd.Series) -> pd.Series:
+    """
+    Estimate dynamic hedge ratio using Kalman Filter.
+
+    Parameters:
+        x (pd.Series): Price series of asset 1.
+        y (pd.Series): Price series of asset 2.
+    Returns:
+        pd.Series: Time-varying hedge ratio.
+    """
+```
+
+Use inline comments to explain reasoning or financial logic — never syntax.
+
+---
+
+## Quant Research Workflow
+
+Each step must follow this workflow:
+
+1. **Data Engineering**
+
+   * Fetch continuous futures data from Yahoo Finance or Quandl.
+   * Handle contract rolls, back-adjustment, and missing data.
+   * Align timestamps across markets.
+   * Save cleaned data in `/data/processed/`.
+
+2. **Feature Engineering**
+
+   * Compute spreads, z-scores, realized volatility, and correlation.
+   * Derive regime features using Kalman, GARCH, or HMM.
+   * Store all engineered features in `/data/processed/features.csv`.
+
+3. **Modeling**
+
+   * Implement cointegration and error-correction tests.
+   * Train Kalman filters for dynamic betas.
+   * Fit GARCH(1,1) or EGARCH for volatility.
+   * Estimate regime probabilities via HMM.
+
+4. **Trading and Backtesting**
+
+   * Generate entry/exit signals based on z-scores and volatility filters.
+   * Apply adaptive leverage per regime.
+   * Include slippage, transaction costs, and volatility targeting.
+   * Backtest with rolling windows and out-of-sample validation.
+
+5. **Performance Analysis**
+
+   * Compute Sharpe, Sortino, drawdown, and VaR.
+   * Plot cumulative PnL, regime overlays, and signal histograms.
+   * Produce summary tables and performance reports.
+
+6. **Execution Simulation**
+
+   * Simulate execution in IBKR paper environment.
+   * Track latency, order fills, and signal drift.
+   * Export execution logs for monitoring.
+
+---
+
+## Testing and Validation
+
+Place tests under `/tests/`.
+Required tests:
+
+* `test_data_integrity.py` → no NaNs, correct indices
+* `test_cointegration.py` → cointegration p-values < threshold
+* `test_strategy_performance.py` → backtest returns reproducible
+* `test_model_stability.py` → hedge ratios and regimes remain bounded
+
+Run with:
+
+```
+pytest -q
+```
+
+---
+
+## Visualization and Results
+
+Visualization output rules:
+
+* Figures → `src/utils/results/figures/`
+* Tables → `src/utils/results/tables/`
+* Reports → `src/utils/results/reports/`
+
+File naming:
+
+* `spread_regimes.png`
+* `pnl_curve.png`
+* `rolling_sharpe.png`
+* `hmm_states_overlay.png`
+
+All visuals must:
+
+* Have labeled axes and readable titles.
+* Use consistent color palettes.
+* Avoid overlapping labels or unnecessary grid clutter.
+
+---
+
+## Version Control Rules
+
+* Write short, imperative commit messages with no emojis:
+
+  * `Add Kalman filter hedge ratio estimation`
+  * `Implement HMM regime labeling`
+  * `update stuff`
+* Clear all notebook outputs before committing.
+* Never commit raw data, `.ipynb_checkpoints`, or credentials.
+* Keep `README.md`, `requirements.txt`, and `settings.yaml` current.
+
+---
+
+## Cursor Behavior
+
+When editing or generating code:
+
+* Modify only relevant sections.
+* Maintain function signatures and imports.
+* Preserve all docstrings and existing structure.
+* Fix style inconsistencies automatically.
+* Never rename or relocate core modules unless explicitly instructed.
+
+---
+
+## Final Objective
+
+Maintain a **front-office-grade quantitative trading codebase** that:
+
+* Demonstrates mastery of adaptive statistical arbitrage and regime modeling.
+* Is reproducible, auditable, and interpretable.
+* Resembles real-world infrastructure used by systematic commodity desks.
+* Is structured and documented clearly enough for portfolio managers and researchers to review confidently.
+
+---
+
+```
+```
