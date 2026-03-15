@@ -1,0 +1,14 @@
+default:
+  delta: 1.0e-4          # State transition noise (Q = delta * I)
+  observation_noise: 1.0e-3   # Observation noise (R)
+  initial_beta: 1.0
+  initial_uncertainty: 1.0
+
+tuning:
+  delta_grid: [1.0e-5, 5.0e-5, 1.0e-4, 5.0e-4, 1.0e-3]
+  R_grid: [1.0e-4, 5.0e-4, 1.0e-3, 5.0e-3, 1.0e-2]
+  eval_metric: "residual_half_life"
+  min_train_days: 504     # 2 years
+
+rolling_ols_baselines:
+  windows: [60, 120, 252]

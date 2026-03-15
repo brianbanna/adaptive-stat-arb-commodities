@@ -1,0 +1,93 @@
+spreads:
+  # Cross-commodity spreads
+  wti_brent:
+    category: "cross_commodity"
+    long_leg: { symbol: "CL", source: "stooq", stooq_symbol: "CL.F" }
+    short_leg: { symbol: "CO", source: "nasdaq", nasdaq_symbol: "CHRIS/ICE_B1" }
+    method: "difference"
+    description: "WTI vs Brent location/quality spread"
+
+  gold_silver:
+    category: "cross_commodity"
+    long_leg: { symbol: "GC", source: "stooq", stooq_symbol: "GC.F" }
+    short_leg: { symbol: "SI", source: "stooq", stooq_symbol: "SI.F" }
+    method: "ratio"
+    description: "Gold/Silver ratio"
+
+  corn_wheat:
+    category: "cross_commodity"
+    long_leg: { symbol: "ZC", source: "stooq", stooq_symbol: "ZC.F" }
+    short_leg: { symbol: "ZW", source: "stooq", stooq_symbol: "ZW.F" }
+    method: "difference"
+    description: "Corn vs Wheat substitution spread"
+
+  copper_gold:
+    category: "cross_commodity"
+    long_leg: { symbol: "HG", source: "stooq", stooq_symbol: "HG.F" }
+    short_leg: { symbol: "GC", source: "stooq", stooq_symbol: "GC.F" }
+    method: "ratio"
+    description: "Copper/Gold risk-on proxy"
+
+  # Processing spreads
+  crack_spread:
+    category: "processing"
+    legs:
+      - { symbol: "RB", weight: 2, multiplier: 42 }
+      - { symbol: "HO", weight: 1, multiplier: 42 }
+      - { symbol: "CL", weight: -3, multiplier: 1 }
+    method: "basket"
+    description: "3:2:1 crack spread (refining margin)"
+
+  crush_spread:
+    category: "processing"
+    legs:
+      - { symbol: "ZM", weight: 1, multiplier: 0.022 }
+      - { symbol: "ZL", weight: 1, multiplier: 11 }
+      - { symbol: "ZS", weight: -1, multiplier: 1 }
+    method: "basket"
+    description: "Soybean crush spread (processing margin)"
+
+  # Calendar spreads
+  cl_1_6:
+    category: "calendar"
+    commodity: "CL"
+    near_contract: 1
+    far_contract: 6
+    method: "calendar"
+    description: "WTI front vs 6-month"
+
+  cl_1_12:
+    category: "calendar"
+    commodity: "CL"
+    near_contract: 1
+    far_contract: 12
+    method: "calendar"
+    description: "WTI front vs 12-month"
+
+  ng_1_6:
+    category: "calendar"
+    commodity: "NG"
+    near_contract: 1
+    far_contract: 6
+    method: "calendar"
+    description: "Natural gas front vs 6-month"
+
+  zc_1_3:
+    category: "calendar"
+    commodity: "ZC"
+    near_contract: 1
+    far_contract: 3
+    method: "calendar"
+    description: "Corn front vs 3-month"
+
+  gc_1_6:
+    category: "calendar"
+    commodity: "GC"
+    near_contract: 1
+    far_contract: 6
+    method: "calendar"
+    description: "Gold front vs 6-month"
+
+date_range:
+  start: "2005-01-01"
+  end: "2024-12-31"

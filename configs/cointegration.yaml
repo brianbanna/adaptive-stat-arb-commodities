@@ -1,0 +1,23 @@
+engle_granger:
+  significance: 0.05
+  max_lags: "auto"
+
+adf:
+  significance: 0.05
+  regression: "c"
+
+johansen:
+  det_order: 0
+  k_ar_diff: 1
+
+rolling:
+  method: "expanding"
+  min_observations: 252
+  retest_frequency: "quarterly"
+  break_threshold_consecutive_quarters: 2
+
+quality_filters:
+  min_half_life_days: 5
+  max_half_life_days: 60
+  max_hurst_exponent: 0.45
+  max_adf_pvalue: 0.05

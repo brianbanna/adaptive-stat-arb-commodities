@@ -1,0 +1,21 @@
+costs:
+  default:
+    per_leg_commission_bps: 2
+    per_leg_slippage_bps: 2
+    roll_cost_per_leg_bps: 2
+  overrides:
+    gold_silver:
+      per_leg_slippage_bps: 3
+    corn_wheat:
+      per_leg_slippage_bps: 3
+    crack_spread:
+      per_leg_slippage_bps: 2
+    crush_spread:
+      per_leg_slippage_bps: 3
+
+risk_free_rate:
+  source: "FRED"
+  series: "DGS3MO"
+  fallback: 0.02
+
+sensitivity_cost_bps: [0, 4, 8, 12, 16, 20, 24, 30]

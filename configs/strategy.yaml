@@ -1,0 +1,14 @@
+portfolio:
+  vol_target: 0.08
+  max_concurrent_positions_per_spread: 3
+  max_sector_exposure: 0.30
+  max_total_notional: 0.60
+
+allocation:
+  cross_commodity: 0.50
+  calendar: 0.30
+  processing: 0.20
+
+execution:
+  lag_days: 1
+  rebalance: "daily"
