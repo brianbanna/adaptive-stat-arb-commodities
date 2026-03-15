@@ -1,0 +1,15 @@
+zscore:
+  method: "expanding"
+  min_observations: 60
+
+entry_exit:
+  default:
+    entry_z: 2.0
+    exit_z: 0.3
+    stop_z: 4.0
+    max_holding_days: 60
+
+confirmation:
+  require_cointegration: true
+  max_half_life_days: 60
+  min_half_life_days: 5
