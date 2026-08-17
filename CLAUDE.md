@@ -31,13 +31,39 @@ comment at the top of the file, required by its own Part H rule 1. Nothing else 
 skeleton, the config scaffolds, the spec, and the archived legacy material. No science
 code, no result.
 
-**The next deliverable is D1, the data audit note, due 17 August 2026, which is today.**
-Every series in the universe with its verified source, access method, history depth,
-license, and a PASS or CUT verdict. 1 page. It must include the DME Oman check as the
-crude third leg candidate, the JKM check for the gas basket, the confirmation that the
-Baltic indices are CUT, and the WRDS Datastream subscription check for licensed futures
-history. **The universe is locked at the end of the week and no downstream work runs on an
-unverified series.**
+**D1, the data audit note. DELIVERED 17 August 2026. `docs/D1-data-audit.md`. Read it
+before D2 or D4.** It did not exist before that date; the earlier scaffold never contained
+one.
+
+**THE UNIVERSE IS NOT LOCKED. 2 baskets of 4 pass.**
+
+| Basket | Verdict |
+|---|---|
+| Crack, CL RB HO | **PASS**, 3 of 3 legs on verified free EIA daily spot |
+| Brent WTI, the parity anchor | **PASS**, 2 of 2 legs on verified free EIA daily spot |
+| Gas hubs, TTF HH NBP | **FAIL**, 1 of 3. Henry Hub verified, TTF and NBP not |
+| Crush, ZS ZM ZL | **FAIL**, 0 of 3. No leg has a verified free daily source |
+
+3 findings that change how the next deliverables are built, none of them optional:
+
+1. **Crush, the spec's designated anchor, has no verified free data path.** Part F step 4
+   orders the work crush first because it is the near certain anchor, and Part I falls back
+   to crush when another basket fails. That assumption does not hold on verified sources
+   today. Do not start D4 on crush.
+2. **The verified series are spot assessments, not futures settlements.** A basket
+   estimated on them is estimated on a documented substitute leg, and its D6 note says so.
+3. **EIA spot publication lags roughly 4 business days.** All 5 verified series ended
+   2026-08-11 when queried on 2026-08-17. Adequate as history, not a live daily source. A
+   backtest treating an EIA print as available on its observation date is lookahead and
+   voids the run.
+
+DME Oman is CUT, so crude stays a 2 leg basket as the spec pre committed. The Baltic CUT is
+confirmed. WRDS is CONDITIONAL and unresolved: EPFL subscribes to WRDS, but the modules it
+names are Compustat, CRSP, and IBES, and Datastream is not among them. Confirming that
+needs a signed in check of the subscribed products list. Action on Brian.
+
+**No downstream work runs on an unverified series.** D4 may proceed on crack and on the
+Brent WTI anchor. It may not proceed on crush or gas.
 
 Then, in order:
 
