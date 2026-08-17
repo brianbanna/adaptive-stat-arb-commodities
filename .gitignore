@@ -1,18 +1,36 @@
-# Data (downloaded via pipeline)
+# Data.
+# data/raw is the collected record. data/processed is always regenerable from raw and is
+# therefore disposable. A fix regenerates processed from raw and never edits raw.
 /data/raw/*
 /data/processed/*
+/data/cache/*
 !/data/raw/.gitkeep
 !/data/processed/.gitkeep
-!/data/cache/*
+!/data/cache/.gitkeep
+
+# Generated results. Every figure and table regenerates from raw under a config hash, so
+# none of them belongs in git.
+/results/figures/*
+/results/tables/*
+/results/tearsheets/*
+!/results/figures/.gitkeep
+!/results/tables/.gitkeep
+!/results/tearsheets/.gitkeep
+
+# WRDS. History block only, academic use, never republished.
+/data/wrds/
+*_wrds.parquet
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 *.egg-info/
+.eggs/
 dist/
 build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -22,14 +40,19 @@ build/
 venv/
 .venv/
 .env
+.env.local
 
-# OS / IDE
+# Claude session files. The superseded plan documents are archived in docs/legacy/.
+.claude/
+
+# Secrets. Credentials are read from environment variables and never written to a file.
+secrets.yaml
+*.pem
+*.key
+
+# OS and editor
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
 .cursor/
-
-# API keys
-.env.local
-secrets.yaml

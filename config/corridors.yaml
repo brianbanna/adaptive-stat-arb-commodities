@@ -1,0 +1,74 @@
+# corridors.yaml
+# Physical arbitrage corridors. SPEC Part D deliverable D15, methods in Part G.
+#
+# A corridor has 2 uses and they must not be conflated. Inside, the mean reversion prior
+# is stronger and sizing is multiplied. Outside, a sustained excursion is promoted to
+# structural evidence and lands in the break catalogue, NOT treated as a larger fade.
+
+meta:
+  version: 0
+  deliverable: D15
+  minimum_shipped: 2              # crush and crack at minimum, per the compressed scope
+
+rules:
+  inside_sizing_multiplier: 1.25
+  outside_promotion_days: 20
+  promotion_target: break_catalogue
+  note: >
+    A promoted excursion is structural evidence with a named event attached. It is never
+    logged as a losing fade, and the trade log and the catalogue are not the same record.
+
+corridors:
+
+  crush:
+    formula: 0.022 * ZM + 0.11 * ZL - ZS      # SPEC Part G
+    bound_against: crusher_cost_bands
+    cost_bands:
+      low: UNSET
+      high: UNSET
+      source: UNSET
+
+  crack:
+    formula: "3:2:1"                          # 3 CL against 2 RB and 1 HO
+    bound_against: refinery_cost_and_utilization
+    utilization_source: eia
+    cost_bands:
+      low: UNSET
+      high: UNSET
+      source: UNSET
+
+  gas_hubs:
+    formula: TTF - HENRY_HUB                  # in EUR/MWh, converted per baskets.yaml
+    bound_against: lng_diversion_cost
+    components:
+      liquefaction:
+        low: UNSET
+        high: UNSET
+        source: UNSET
+      shipping:
+        low: UNSET
+        high: UNSET
+        source: UNSET
+        note: >
+          This band is the only place freight enters the project. The Baltic indices are
+          CUT and freight survives nowhere else.
+      regasification:
+        low: UNSET
+        high: UNSET
+        source: UNSET
+
+  brent_wti:
+    formula: BRENT - CL
+    bound_against: pipeline_plus_freight
+    components:
+      pipeline:
+        low: UNSET
+        high: UNSET
+        source: UNSET
+      freight:
+        low: UNSET
+        high: UNSET
+        source: UNSET
+
+# Every band above is a published assumption and needs a source before it feeds a chart.
+# An UNSET band does not enter a published corridor chart or a promotion decision.

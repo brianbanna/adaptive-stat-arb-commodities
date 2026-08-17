@@ -1,0 +1,105 @@
+# backtest.yaml
+# Signals, costs, sizing, the portfolio layer, and the anti self deception protocol.
+# SPEC Part D deliverables D16, D17, D18, methods in Part G.
+
+meta:
+  version: 0
+  deliverable: [D16, D17, D18]
+
+# ---------------------------------------------------------------------------
+# Signals. SPEC Part G.
+# ---------------------------------------------------------------------------
+signals:
+  zscore:
+    series: kalman_residual
+    trailing_window_days: 120
+  entry:
+    abs_z: 2.0
+    requires_traffic_light: GREEN   # entry is gated, not merely filtered
+  exit:
+    z_toward_zero: 0.5
+  time_stop:
+    multiple_of_half_life: 3
+  forced_flat_on: RED
+
+# ---------------------------------------------------------------------------
+# Execution and timestamps. SPEC Part D deliverable D16.
+# ---------------------------------------------------------------------------
+execution:
+  base_case: t0_close
+  sensitivity: t1_open
+  point_in_time: true
+  timestamp_audit:
+    sampled_month_required: true
+  note: >
+    Every input must have been knowable at the timestamp the backtest uses it at. An
+    input that fails the audit voids the run rather than earning a caveat.
+
+# ---------------------------------------------------------------------------
+# Costs. SPEC Part G. The 1x, 2x, 4x sensitivity table is mandatory regardless of outcome.
+# ---------------------------------------------------------------------------
+costs:
+  cme_complex:
+    ticks_per_side: 1
+    slippage_ticks_per_side: 0.5
+  ttf:
+    multiplier_on_liquid_assumption: 2.0   # T5, applied from the start, not as a stress
+  roll:
+    charge_crossing_per_leg: true
+  sensitivity_multipliers: [1, 2, 4]
+  t5_trigger:
+    condition: sharpe_sign_flips_1x_to_2x
+    consequence: >
+      Labeled not robust to costs and excluded from every headline. The sensitivity table
+      ships regardless of the outcome.
+
+# ---------------------------------------------------------------------------
+# Sizing and the portfolio layer. SPEC Part G and D16.
+# ---------------------------------------------------------------------------
+sizing:
+  target_daily_vol_bps_per_basket: 50
+portfolio:
+  allocation: equal_risk
+  gross_cap: 4.0
+  per_basket_cap: 1.5
+
+# ---------------------------------------------------------------------------
+# Attribution. SPEC Part D deliverable D17.
+# ---------------------------------------------------------------------------
+attribution:
+  buckets:
+    - green_mean_reversion
+    - amber_red_losses_avoided_vs_shadow
+    - red_optionality_entries
+  shadow_ungated_run:
+    required: true
+    reproducible: true
+  overlay_verdict:
+    question: does_the_overlay_earn_its_complexity
+    negative_ships: true
+    note: >
+      If bucket b plus bucket c is at or below the shadow run, that is the finding. It is
+      reported. The catalogue and the lead and lag validation stand as research and the
+      external framing moves to measurement. It is not re engineered until it looks better.
+
+# ---------------------------------------------------------------------------
+# THE PROTOCOL. SPEC Part D deliverable D18 and Part H rule 5.
+# This block is the anti self deception contract and it appears verbatim in the note.
+# ---------------------------------------------------------------------------
+protocol:
+  threshold_freeze:
+    on_data_through: 2021-12-31
+    or_first_fraction_of_sample: 0.60
+    frozen: false
+    frozen_at: UNSET
+  validation_iterations_permitted: 1
+  validation_iterations_used: 0
+  test_set:
+    window_start: 2025-01-01
+    runs_permitted: 1
+    runs_executed: 0
+    execution_log: []
+  note: >
+    THE TEST SET RUNS ONCE. A rerun request is flagged, requires explicit confirmation
+    from the user, and every execution is appended to execution_log with its date and
+    reason. Editing runs_executed back down is falsifying the record.

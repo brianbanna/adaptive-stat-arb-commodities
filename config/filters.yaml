@@ -1,0 +1,35 @@
+# filters.yaml
+# Multivariate Kalman filter. SPEC Part D deliverable D5, methods in Part G.
+
+meta:
+  version: 0
+  deliverable: D5
+
+kalman:
+  state: free_weights             # n minus 1 free weights of the cointegrating vector
+  evolution: random_walk
+  mode: fixed_q                   # default; likelihood_estimated is the alternative
+  fixed_q: UNSET                  # SPEC does not fix a value; set it and record why here
+  fixed_q_justification: UNSET
+  observation_noise: UNSET
+  initial_weight_uncertainty: UNSET
+  weight_cap: UNSET               # the cap whose binding frequency is the T3 trigger
+
+  outputs_daily:
+    - weights
+    - residual
+    - innovations
+    - innovation_variance
+  # The innovations feed break layer 2 directly, so their standardization is part of the
+  # public contract of this module and not an internal detail.
+
+# T3 STABILITY TRIGGER. SPEC Part I. Watched from day 1, evaluated and logged either way.
+t3_trigger:
+  weight_cap_binding_fraction_of_days: 0.05
+  residual_variance_ratio_vs_fixed_vector: 2.0
+  fallback:
+    action: demote
+    to: quarterly_reestimated_johansen_vector_plus_scalar_kalman_on_residual
+    note: >
+      Pre committed. Execute without renegotiating when a trigger fires. The multivariate
+      attempt ships as a methods comparison rather than being deleted.

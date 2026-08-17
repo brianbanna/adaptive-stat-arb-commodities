@@ -1,0 +1,90 @@
+# baskets.yaml
+# The spec universe. SPEC Part D deliverables D1, D4, D6, Part E data register.
+#
+# 3 baskets, each with a physical mechanism, plus the legacy pair carried forward as the
+# parity anchor. A basket does not enter this file until D1 has locked it with a verified
+# source and a PASS verdict. No downstream work runs on an unverified series.
+#
+# STATUS: v0. Legs and mechanisms are from SPEC Part D and Part E. Source verdicts are
+# transcribed from Part E and are confirmed by D1, which is due 17 August 2026.
+
+meta:
+  version: 0
+  deliverable: [D1, D4, D6]
+  universe_locked: false
+
+# Unit conversions. Declared once, here, and never re derived in a module.
+conversions:
+  mmbtu_to_mwh: 0.293071          # SPEC Part E, Henry Hub conversion
+  fx_source: ecb_reference_rates  # SPEC Part E
+
+baskets:
+
+  crush:
+    order: 1                      # SPEC Part F step 4: crush first, it is the anchor
+    mechanism: >
+      Soybeans are crushed into meal and oil, so the bean price cannot drift arbitrarily
+      far from the combined price of what it becomes. Absurd crusher margins or shutdowns
+      both pull the prices back together. This is a mechanical processing identity, which
+      is why it is the near certain anchor of the 3.
+    legs: [ZS, ZM, ZL]
+    normalize_leg: ZS             # first leg = 1, SPEC Part G
+    source_verdict: plausible_free
+    source_notes: >
+      stooq, Yahoo, or CME delayed. WRDS Datastream is a history upgrade only if
+      subscribed; the free feed stays the living source.
+
+  crack:
+    order: 2
+    mechanism: >
+      Crude is refined into gasoline and diesel. The refining margin bounds how far the
+      product prices can move away from the crude price before refinery run decisions
+      respond.
+    legs: [CL, RB, HO]
+    normalize_leg: CL
+    source_verdict: plausible_free
+    third_leg_candidate: DME_OMAN
+    third_leg_status: >
+      UNVERIFIED, a D1 item. If DME Oman fails verification, crude stays a 2 leg basket
+      and that is documented rather than substituted around.
+
+  gas_hubs:
+    order: 3
+    mechanism: >
+      European, American, and Asian gas are connected by LNG ships that physically move
+      molecules toward whichever market pays more. The diversion economics bound the
+      spread.
+    legs: [TTF, HENRY_HUB, NBP]
+    normalize_leg: TTF
+    units:
+      TTF: eur_per_mwh            # native
+      HENRY_HUB: usd_per_mmbtu    # converted via conversions.mmbtu_to_mwh
+      NBP: gbp_per_therm
+    source_verdict: mixed
+    source_notes: >
+      Henry Hub VERIFIED via EIA. TTF and NBP plausible free. JKM replaces NBP only if a
+      free daily series verifies, otherwise NBP stands.
+
+  brent_wti:
+    order: 0
+    role: parity_anchor
+    mechanism: >
+      Crude location and quality differential, bounded by pipeline and freight economics.
+      This is the legacy pair and it is what the D3 parity gate reproduces.
+    legs: [CL, BRENT]
+    normalize_leg: BRENT
+    source_verdict: plausible_free
+
+# CUT from the universe. Recorded so the decision is not silently revisited.
+cut:
+  baltic_indices:
+    reason: >
+      No sustainable free path. Freight content survives only inside the gas corridor's
+      banded public shipping assumptions, and nowhere else in the project.
+
+# Continuous futures construction. SPEC Part D deliverable D2.
+rolls:
+  own_roll_business_days_before_expiry: 5
+  adjustment: back_adjusted_additive
+  retain_unadjusted: true         # cointegration robustness runs on BOTH series
+  calendars_per_market: true

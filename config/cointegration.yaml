@@ -1,0 +1,62 @@
+# cointegration.yaml
+# Johansen, VECM, and half life. SPEC Part D deliverables D4 and D6, methods in Part G.
+#
+# The deterministic term is chosen PER BASKET and the justification is written here, in
+# this file, next to the choice. A deterministic term picked in a notebook and not
+# recorded here is a defect: it is the single most consequential free choice in the
+# Johansen procedure and it must be auditable.
+
+meta:
+  version: 0
+  deliverable: [D4, D6]
+
+johansen:
+  implementation: statsmodels.tsa.vector_ar.vecm.coint_johansen
+  normalize_first_leg_to: 1.0     # SPEC Part G
+  significance: 0.05
+  tests: [trace, max_eigenvalue]  # both reported, never 1 of them selectively
+  k_ar_diff: 1
+
+  # Per basket deterministic term. Every entry needs a justification string before it is
+  # used in a published table.
+  deterministic_term:
+    crush:
+      det_order: UNSET
+      justification: UNSET
+    crack:
+      det_order: UNSET
+      justification: UNSET
+    gas_hubs:
+      det_order: UNSET
+      justification: UNSET
+    brent_wti:
+      det_order: UNSET
+      justification: UNSET
+
+windows:
+  full_sample: true
+  rolling:
+    length_years: 3
+    step: monthly
+
+vecm:
+  report_adjustment_speeds: true
+  # Which leg does the adjusting is a REPORTED FINDING per basket, not a diagnostic that
+  # gets looked at once and dropped. It is the thing the attribution is checked against.
+
+half_life:
+  method: ar1_on_residual         # SPEC Part G
+  confidence_interval:
+    method: stationary_block_bootstrap
+    block_length: tied_to_half_life_estimate
+    iterations: 1                 # SPEC Part G: iterated once, not tuned
+    n_resamples: 1000
+    confidence_level: 0.95
+    random_state: 42
+
+# SPEC Part D deliverable D4 acceptance gate, and Part I.
+negative_results:
+  rank_zero_ships_as_finding: true
+  note: >
+    A basket returning rank 0 in recent windows is reported as that. The strategy runs on
+    the baskets that pass. Crush is the anchor. Do not respecify a basket until it passes.

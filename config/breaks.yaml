@@ -1,0 +1,75 @@
+# breaks.yaml
+# The 3 layer break overlay and the traffic light.
+# SPEC Part D deliverables D7, D8, D9, D10, methods in Part G.
+
+meta:
+  version: 0
+  deliverable: [D7, D8, D9, D10]
+
+# Layer 1, slow. D7.
+layer_1:
+  rolling_johansen:
+    window_years: 3
+    step: monthly
+  recursive_adf:
+    series: residual_of_fixed_vector
+    significance: 0.05
+  gate: catches_catalogued_breaks_retrospectively
+
+# Layer 2, fast. D8.
+layer_2:
+  primary:
+    method: cusum
+    series: standardized_kalman_innovations
+    threshold: UNSET              # set by the calibration below, never by hand
+  cross_check:
+    method: rolling_mean_absolute_innovation
+    window_days: 20
+  calibration:
+    target_false_alarms_per_year: 2
+    method: block_bootstrap
+    documented: false             # flip to true when the calibration note exists
+    note: >
+      Thresholds are calibrated to the false alarm target and then left alone. Tuning a
+      threshold because the backtest improves is specification search, not calibration.
+
+# Layer 3, retrospective, and the catalogue. D9.
+layer_3:
+  method: bai_perron              # or ruptures with BIC; if changed, record why here
+  method_justification: UNSET
+  scope: full_history
+  catalogue:
+    every_break_dated: true
+    attribute_to_named_physical_event_where_possible: true
+  lead_lag_validation:
+    question: would_layers_1_and_2_have_caught_each_catalogued_break
+    reported_honestly: true
+    note: >
+      A layer that misses breaks is reported as missing them. This validation is a
+      deliverable, not a diagnostic to iterate against.
+
+# The traffic light. D10.
+traffic_light:
+  states:
+    GREEN:
+      new_entries: true
+      position_scalar: 1.0
+    AMBER:
+      new_entries: false
+      position_scalar: 0.5
+    RED:
+      new_entries: false
+      position_scalar: 0.0
+      force_flat: true
+      raise_optionality_flag: true
+  amber_trigger: UNSET            # set from the calibrated layer 2 alarm state
+  red_trigger:
+    sustained_alarm_days: UNSET
+  optionality_flag:
+    rule: long_volatility_proxy
+    structure: poor_mans_straddle_long_the_spread_with_stop_and_reverse
+    stop: UNSET
+    note: >
+      The moment a relationship breaks is when an option on the spread is worth owning.
+      The rule is 2 sided and backtestable, which is why it lives here as parameters and
+      not as a sentence in a note.

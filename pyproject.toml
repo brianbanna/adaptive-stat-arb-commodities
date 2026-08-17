@@ -1,38 +1,56 @@
 [project]
 name = "adaptive-stat-arb-commodities"
 version = "0.1.0"
-description = "Adaptive Statistical Arbitrage in Commodity Spreads"
-requires-python = ">=3.10"
+description = "Multi leg relative value with break detection and the shared spread option pricing engine"
+requires-python = ">=3.11"
 dependencies = [
-    "pandas>=2.0",
-    "numpy>=1.24",
-    "scipy>=1.11",
-    "scikit-learn>=1.3",
-    "matplotlib>=3.8",
-    "seaborn>=0.13",
-    "plotly>=5.18",
-    "pyarrow>=14.0",
-    "pyyaml>=6.0",
-    "tqdm>=4.66",
-    "yfinance>=0.2.31",
-    "fredapi>=0.5",
-    "nasdaq-data-link>=1.0",
+    "polars>=1.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=16.0",
+    "scipy>=1.13",
     "statsmodels>=0.14",
-    "requests>=2.31",
+    "scikit-learn>=1.5",
+    "pyyaml>=6.0",
+    "matplotlib>=3.9",
+    "requests>=2.32",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.0",
-    "ruff>=0.1",
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+# Break detection layer 3 alternative. SPEC deliverable D9 permits ruptures with BIC in
+# place of Bai Perron, with the choice documented in config/breaks.yaml.
+breaks = [
+    "ruptures>=1.1",
+]
+# Data sources the pre refactor pairwise code pulled from. Retained as an extra so the
+# legacy pipeline can still be reproduced for the D3 parity gate without these landing in
+# the base install of a package that 2 other projects import.
+legacy = [
+    "yfinance>=0.2.31",
+    "fredapi>=0.5",
+    "nasdaq-data-link>=1.0",
 ]
 
 [build-system]
-requires = ["setuptools>=68.0"]
+requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["."]
+include = ["statarb*"]
 
 [tool.ruff]
 line-length = 100
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

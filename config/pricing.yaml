@@ -1,0 +1,70 @@
+# pricing.yaml
+# The shared pricing engine. SPEC Part D deliverables D11, D12, D13, D14.
+#
+# THE API FREEZES 20 DECEMBER 2026. After that date this package is additive only and
+# signatures never change, because 2 other projects import it. Changing a default in this
+# file after the freeze changes results in those projects, so any change here after the
+# freeze follows the re publication rule: patch, harness green, regenerate everything
+# downstream, dated correction note. No silent fixes.
+
+meta:
+  version: 0
+  deliverable: [D11, D12, D13, D14]
+  api_freeze_date: 2026-12-20
+  frozen: false
+  frozen_tag: UNSET
+  importers:
+    - power price formation project, congestion rent valuation
+    - commodity volatility trading project, all Greeks and option values
+
+closed_forms:                     # D11
+  models: [black76, margrabe, kirk]
+  kirk_validity_note_required: true
+  greeks: analytic_or_controlled_finite_difference
+  finite_difference_step: UNSET
+
+processes:                        # D12
+  correlated_gbm:
+    decomposition: cholesky
+  seasonal_ou:
+    discretization: exact
+    estimation: included
+  two_correlated_ou: true
+  schwartz_two_factor: interface_reserved
+
+monte_carlo:                      # D13
+  standard_errors: mandatory      # every estimate, no exceptions
+  default_paths: 100000
+  random_seed: 42
+  variance_reduction:
+    antithetic: true
+    control_variates:
+      controls: closed_forms
+    sobol:
+      implementation: scipy.stats.qmc
+      brownian_bridge: true
+    importance_sampling:
+      method: exponential_tilting
+      likelihood_ratio_correction: true
+
+# THE ENGINE GATE. SPEC Part D deliverable D13.
+engine_gate:
+  reproduce_within_standard_errors: 3
+  at_paths: 100000
+  targets: [black76, margrabe]
+  kirk: within_stated_validity_regime
+  efficiency_table_required: true
+
+# Pre committed descope if the December sprint runs late. SPEC Part I.
+minimum_freeze_scope:
+  - closed_forms
+  - antithetic
+  - control_variates
+note: >
+  Sobol and importance sampling land additively in February without touching the API.
+  Descope the scope, never the engine gate.
+
+rates:
+  short_rate_source: config
+  flat_short_rate: UNSET
+  sensitivity_documented: false
