@@ -230,3 +230,7 @@ being able to depend on the numbers.
 - Python 3.11 or later, type hints on public functions, Polars and NumPy and statsmodels as
   the default stack. Validate inputs and fail loudly.
 - Never commit or push unless the user asks. Never force push.
+- Commit messages are short: 1 line, under 72 characters where possible, no body unless the
+  change genuinely needs 1 sentence the subject line cannot carry. No Co-Authored-By
+  trailer, ever. The diff already shows what changed; the message says what and briefly why,
+  not a restatement of the diff in prose.
