@@ -129,3 +129,34 @@ Every result in sections 1 to 3 comes from a request issued on 17 August 2026. R
 date ranges were read from the retrieved files, not from documentation. The EEX, WRDS, and
 Gulf Mercantile positions come from those organizations' own published pages, and each is
 marked UNVERIFIED rather than CUT where a live check was not possible.
+
+---
+
+## 9. Flagged finding, 18 August 2026: a possible European route to the crush gap
+
+**This is a flag, not a decision. Nothing in this section changes this project's
+universe, its configs, or D4's start condition. `config/baskets.yaml` is untouched. Crush
+remains FAILED per section 6, 0 of 3 verified legs, and D4 does not start on it.**
+
+Euronext Paris lists futures on rapeseed, milling wheat, and corn, alongside options on
+the same underlyings. Rapeseed crushes into rapeseed oil and rapeseed meal, the same
+physical relationship the crush basket is built on, so a verified Euronext rapeseed
+futures source could in principle support a crush basket built on European rather than US
+underlyings. This would not fill the ZS, ZM, ZL gap directly; it would be a different
+basket on different instruments, and Euronext does not appear to list rapeseed oil or
+rapeseed meal futures the way CME lists ZM and ZL for soybeans, so the European crush
+economics may need to be constructed differently even if the futures leg verifies.
+
+**Checked 18 August 2026, in the commodity volatility trading project's D1 revision,
+section 9: Euronext's Terms of Use prohibit automated retrieval** in terms structurally
+identical to CME's, quoted there in full. That check covered Euronext's website terms
+generally, which apply to the futures pages as much as the options pages. **The
+verification spike stopped at the terms check and did not proceed to check the futures
+data specifically**, per the same instruction that stopped it on the options side.
+
+**Outcome: this route is closed for now, on the same terms of use grounds as every other
+prohibited source recorded in this project's audits.** It is recorded here as a closed
+flag rather than an open one, since the check that would have resolved it did run, even
+though it ran in the other project's note. If this is revisited, it starts with a written
+permission request to Euronext, the same starting point recorded in the volatility
+project's note, not with a fresh reachability check under different headers.
