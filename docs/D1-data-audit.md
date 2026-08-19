@@ -160,3 +160,86 @@ flag rather than an open one, since the check that would have resolved it did ru
 though it ran in the other project's note. If this is revisited, it starts with a written
 permission request to Euronext, the same starting point recorded in the volatility
 project's note, not with a fresh reachability check under different headers.
+
+---
+
+## 10. Findings inherited from the now retired shared platform repo, 18 August 2026
+
+`commodity-data-platform` was retired 18 August 2026: each project now owns its own data
+ingestion rather than sharing a collection layer. Nothing that repo recorded is lost; the
+findings relevant to this project are copied below, verbatim where the exact wording has
+evidentiary value, from that repo's `config/sources.yaml` before deletion. No new source
+was checked to write this section. Every verdict below was already reached on the date
+shown; this section only changes where the record lives.
+
+### 10.1 CME, verbatim, for the DME Oman route recorded in section 2
+
+Section 2 above notes that DME Oman now sits with Gulf Mercantile Exchange under a CME
+Group partnership, behind the same access position as CME itself. The CME position, checked
+17 August 2026 in the volatility trading project's D1 audit and confirmed there by CME Data
+Sales on 18 August 2026, quoted verbatim:
+
+> This IP address is blocked due to suspected web scraping activity associated with it on
+> this CMEgroup.com page. Use of scripts, software, spiders, robots, avatars, agents, tools
+> or other scraping mechanisms is strictly prohibited by CME Group's website Data Terms of
+> Use.
+
+CME's free FTP settlement site was separately confirmed shut down in 2023, routed through
+paid DataMine. DataMine pricing, confirmed 18 August 2026: 43 USD per instrument per month
+standard, 426 USD per asset class per month basic, 50 percent academic discount both,
+declined by the volatility trading project on zero budget. This project never itself needed
+CME as a primary source; it only touches this finding through the DME Oman route, which
+remains CUT as recorded in section 2.
+
+### 10.2 Euronext, verbatim, for the crush flag recorded in section 9
+
+Section 9 above records a flagged, closed finding on Euronext as a possible European crush
+route, checked 18 August 2026 by the volatility trading project's Track B verification
+spike. The exact clauses, read in full at `euronext.com/en/terms-use`:
+
+> Except if we give you prior written permission, use of any Web browsers (other than
+> generally available third-party browsers), engines, software, spiders, robots, avatars,
+> agents, tools or other devices or mechanisms to navigate, search or determine the
+> Euronext Website is strictly prohibited.
+
+And, on reproduction and derivative works:
+
+> ...you will not sell, license, rent, modify, print, copy, reproduce, download, upload,
+> transmit, distribute, disseminate, publicly display, publicly perform, publish, edit,
+> adapt, compile or create derivative works from any Content or materials (including,
+> without limitation, through framing or systematic retrieval to create collections,
+> compilations, databases or directories)...
+
+This closes the flag in section 9 on the same terms as CME: a prohibition with no research
+exception, requiring written permission to reopen, not a reachability question.
+
+### 10.3 Tracked gaps relevant to this project
+
+From the platform repo's gap tracking, carried forward here rather than lost:
+
+- **`cl_futures`.** Continuous CL futures, as distinct from the EIA WTI Cushing spot series
+  in section 1, were not verified for either this project or the volatility trading project
+  as of 18 August 2026. Both this project's crack and Brent WTI baskets and that project's
+  WTI volatility work need the same contract. Whichever project resolves this first, the
+  other should read that project's own D1 note before attempting its own check, so the
+  search is not run twice independently. This is a shared need tracked in 2 places now
+  rather than 1, since there is no longer a shared repo to track it in a single place.
+- **`soybean_complex`, ZS specifically.** No free daily source found, recorded in section 2
+  above. ZS is also a needed underlying for the volatility trading project's soybean event
+  and vol work; both projects are blocked on the same gap as of 18 August 2026.
+- **`ttf`.** No free daily source found, recorded in section 2 above. The power project's D4
+  fuel cost ingestion needs the same instrument, same hub, same EUR per MWh native unit.
+  Both projects are blocked on the same gap.
+- **`nbp`.** No free daily source found, recorded in section 2 above. The power project does
+  not use NBP; this is a single consumer gap, this project only, as of 18 August 2026.
+- **`ng_futures`.** Not separately tracked anywhere. This project's Henry Hub need is already
+  served by the verified EIA spot series in section 1. Nothing to build against continuous
+  NG futures unless a future need specifically requires futures rather than spot.
+
+### 10.4 EIA daily spot, already this project's own finding
+
+The EIA daily spot series in section 1 above was verified here, in this project's own D1
+audit, on 17 August 2026. It was never inherited from the platform repo; the platform repo
+inherited it from here, and shared it onward to the volatility trading project. That
+project now owns a copy of the same finding directly in its own D1 note, following the same
+retirement of the shared layer. Nothing here changes.

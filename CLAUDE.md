@@ -72,7 +72,11 @@ Then, in order:
 
 - **D2, continuous futures builder, 20 September 2026.** Own rolls at 5 business days
   before expiry, back adjusted additive, and the unadjusted series retained because
-  cointegration robustness later runs on both. Lives in the shared platform repo.
+  cointegration robustness later runs on both. Built in this repo's own `statarb/data/`,
+  as of 18 August 2026: the shared platform repo that originally owned this deliverable was
+  retired that day, each project now owns its own ingestion, and every finding relevant to
+  this project that repo had recorded was copied into `docs/D1-data-audit.md` section 10
+  before it was deleted.
 - **D3, the refactored package, 21 September 2026.** 2 September weekends. Weekend 1: the
   skeleton and the configs, already scaffolded here. Weekend 2: port the pairwise science
   untouched and run the parity gate. **THE PARITY GATE: reproduce the legacy Brent WTI
